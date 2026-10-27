@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hornex Ultra/Super Precision Craft Calculator</title>
+    <title>Hornex Craft Calculator</title>
     <style>
-        /* Modern CSS variables for easy styling updates */
         :root {
-            --bg-main: #0a0c10;          /* Deep futuristic dark background */
-            --bg-card: #161b22;          /* Sleek container color */
-            --bg-input: #0d1117;         /* Dark contrast input fields */
-            --primary: #ffaa00;          /* Signature vibrant gold */
-            --primary-hover: #e59900;    /* Darker gold for buttons on hover */
-            --accent-green: #00ffaa;     /* Neon green for high success stats */
-            --text-main: #c9d1d9;        /* Soft readable text */
-            --text-light: #f0f6fc;       /* Bright text for headings/values */
-            --border-color: #30363d;     /* Minimalist borders */
+            --bg-main: #0c0f12;          /* Deep dark slate */
+            --bg-card: rgba(22, 28, 36, 0.85); /* Semi-transparent container */
+            --bg-input: #0d1116;         
+            --primary: #9be1fb;          /* Ice teal/celestial blue accent from planet */
+            --primary-hover: #6cbcdb;    
+            --accent-green: #00ffaa;     
+            --text-main: #c9d1d9;        
+            --text-light: #f0f6fc;       
+            --border-color: rgba(69, 162, 158, 0.25); 
         }
 
         body {
@@ -29,77 +28,91 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Fixed background image set to 20% opacity */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://files.catbox.moe/c1spe8.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.20;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
             background-color: var(--bg-card);
-            border-radius: 16px;
-            padding: 35px;
-            /* Creates a clean glow effect around the calculator */
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 2px rgba(255, 170, 0, 0.15);
-            max-width: 520px;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            max-width: 480px;
             width: 100%;
             border: 1px solid var(--border-color);
             box-sizing: border-box;
+            backdrop-filter: blur(8px); /* Subtle frosted glass integration */
         }
 
         h1 {
             text-align: center;
             color: var(--text-light);
             margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 24px;
+            margin-bottom: 25px;
+            font-size: 22px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            /* Subtle text glow for a high-tier feel */
-            text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(155, 225, 251, 0.2);
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #8b949e;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         select, input[type="number"] {
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             background-color: var(--bg-input);
             color: var(--text-light);
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
         }
 
-        /* Gold highlight when fields are clicked */
         select:focus, input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(255, 170, 0, 0.2);
         }
 
         .btn {
             display: block;
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background-color: var(--primary);
-            color: var(--bg-main);
+            color: #0b0c10;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 800;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 25px;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: background 0.2s, transform 0.1s;
@@ -110,26 +123,26 @@
         }
 
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
         }
 
         .result-box {
-            margin-top: 35px;
-            padding: 25px;
-            background-color: var(--bg-input);
-            border-radius: 12px;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(13, 17, 22, 0.9);
+            border-radius: 8px;
             border-left: 4px solid var(--primary);
-            border-top: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: none;
         }
 
         .result-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -139,10 +152,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
-            font-size: 15px;
-            border-bottom: 1px dashed rgba(48, 54, 61, 0.6);
-            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding-bottom: 6px;
         }
 
         .stat-line:last-of-type {
@@ -155,17 +168,17 @@
             color: var(--text-light);
             font-weight: 700;
             font-family: monospace;
-            font-size: 16px;
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Hornex High-Tier Simulator</h1>
+    <h1>Hornex Simulator</h1>
     
     <div class="form-group">
-        <label for="recipe">Target Recipe (From 5 Items):</label>
+        <label for="recipe">Target Recipe:</label>
         <select id="recipe">
             <option value="super">5 Ultra ➔ 1 Super (1% Chance)</option>
             <option value="hyper">5 Super ➔ 1 Hyper (0.51% Chance)</option>
@@ -173,21 +186,21 @@
     </div>
 
     <div class="form-group">
-        <label for="budget">How many base petals do you have total?</label>
+        <label for="budget">Total Base Petals:</label>
         <input type="number" id="budget" min="5" value="50">
     </div>
 
-    <button class="btn" onclick="calculatePreciseCraft()">Calculate True Probabilities</button>
+    <button class="btn" onclick="calculatePreciseCraft()">Calculate</button>
 
     <div class="result-box" id="resultBox">
-        <div class="result-title">Mathematical Analysis</div>
+        <div class="result-title">Analysis</div>
         
         <div class="stat-line">
-            <span>Raw Success Chance per Roll:</span>
+            <span>Chance per Roll:</span>
             <span class="stat-val" id="rawChance">--</span>
         </div>
         <div class="stat-line">
-            <span>Average Petals Lost on Failure:</span>
+            <span>Avg Petals Lost on Fail:</span>
             <span class="stat-val">2.5 petals</span>
         </div>
         <div class="stat-line">
@@ -195,11 +208,11 @@
             <span class="stat-val" id="expectedCost">--</span>
         </div>
         <div class="stat-line">
-            <span>Max Rolls with Your Budget:</span>
+            <span>Max Budget Rolls:</span>
             <span class="stat-val" id="maxRolls">--</span>
         </div>
         <div class="stat-line">
-            <span>Your Overall Probability of Success:</span>
+            <span>Overall Success Chance:</span>
             <span class="stat-val" id="overallSuccess" style="color: var(--accent-green);">--</span>
         </div>
     </div>
@@ -225,7 +238,7 @@
 
         document.getElementById('rawChance').innerText = `${(p * 100).toFixed(2)}%`;
         document.getElementById('expectedCost').innerText = `${Math.ceil(expectedNetCost)} ${recipe === 'super' ? 'Ultras' : 'Supers'}`;
-        document.getElementById('maxRolls').innerText = `${maxRolls} attempts`;
+        document.getElementById('maxRolls').innerText = `${maxRolls} rolls`;
         document.getElementById('overallSuccess').innerText = `${totalSuccessChance.toFixed(2)}%`;
         
         document.getElementById('resultBox').style.display = 'block';
