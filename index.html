@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hornex Ultra/Super Precision Craft Calculator</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #333;
+        }
+        h1 {
+            text-align: center;
+            color: #ffaa00;
+            margin-bottom: 25px;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #b3b3b3;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        select:focus, input:focus {
+            border-color: #ffaa00;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #ffaa00;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #e59900;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #151515;
+            border-left: 4px solid #ffaa00;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffaa00;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .stat-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+        .stat-val {
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Hornex High-Tier Simulator</h1>
+    
+    <div class="form-group">
+        <label for="recipe">Target Recipe (From 5 Items):</label>
+        <select id="recipe">
+            <option value="super">5 Ultra ➔ 1 Super (1% Chance)</option>
+            <option value="hyper">5 Super ➔ 1 Hyper (0.51% Chance)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="budget">How many base petals do you have total?</label>
+        <input type="number" id="budget" min="5" value="50">
+    </div>
+
+    <button class="btn" onclick="calculatePreciseCraft()">Calculate True Probabilities</button>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-title">Mathematical Analysis</div>
+        
+        <div class="stat-line">
+            <span>Raw Success Chance per Roll:</span>
+            <span class="stat-val" id="rawChance">--</span>
+        </div>
+        <div class="stat-line">
+            <span>Average Petals Lost on Failure:</span>
+            <span class="stat-val">2.5 petals</span>
+        </div>
+        <div class="stat-line">
+            <span>Expected Cost per Success:</span>
+            <span class="stat-val" id="expectedCost">--</span>
+        </div>
+        <div class="stat-line">
+            <span>Max Rolls with Your Budget:</span>
+            <span class="stat-val" id="maxRolls">--</span>
+        </div>
+        <div class="stat-line">
+            <span>Your Overall Probability of Success:</span>
+            <span class="stat-val" id="overallSuccess" style="color: #00ff66;">--</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculatePreciseCraft() {
+        const recipe = document.getElementById('recipe').value;
+        const budget = parseInt(document.getElementById('budget').value);
+        
+        // Exact raw chances provided by user
+        const p = recipe === 'super' ? 0.01 : 0.0051; 
+        
+        // On average, failing removes 1, 2, 3, or 4 petals.
+        // Assuming equal distribution, average loss is (1+2+3+4)/4 = 2.5 petals.
+        const avgLossOnFailure = 2.5; 
+
+        // Expected cost formulation:
+        // You pay 5 up front. If you fail (1-p), you get refunded some, meaning you lost avgLossOnFailure.
+        // Formula for expected net cost to hit 1 success: 5 + ((1 - p) / p) * avgLossOnFailure
+        const expectedNetCost = 5 + ((1 - p) / p) * avgLossOnFailure;
+
+        // How many rolling attempts can your budget handle?
+        // First roll costs 5. Every subsequent roll costs avgLossOnFailure (2.5) to top back up.
+        let maxRolls = 0;
+        if (budget >= 5) {
+            maxRolls = 1 + Math.floor((budget - 5) / avgLossOnFailure);
+        }
+
+        // Cumulative probability: 1 - (Failure Chance)^(Number of Rolls)
+        const cumulativeFailureChance = Math.pow(1 - p, maxRolls);
+        const totalSuccessChance = (1 - cumulativeFailureChance) * 100;
+
+        // Render values to the UI
+        document.getElementById('rawChance').innerText = `${(p * 100).toFixed(2)}%`;
+        document.getElementById('expectedCost').innerText = `${Math.ceil(expectedNetCost)} ${recipe === 'super' ? 'Ultras' : 'Supers'}`;
+        document.getElementById('maxRolls').innerText = `${maxRolls} attempts`;
+        document.getElementById('overallSuccess').innerText = `${totalSuccessChance.toFixed(2)}%`;
+        
+        document.getElementById('resultBox').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
