@@ -4,116 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hornex Ultra/Super Precision Craft Calculator</title>
-    <!-- STEP 1: This adds the green Yoba mascot as your browser tab icon -->
-    <link rel="icon" type="image/png" href="https://nocookie.net">
     <style>
+        /* Modern CSS variables for easy styling updates */
+        :root {
+            --bg-main: #0a0c10;          /* Deep futuristic dark background */
+            --bg-card: #161b22;          /* Sleek container color */
+            --bg-input: #0d1117;         /* Dark contrast input fields */
+            --primary: #ffaa00;          /* Signature vibrant gold */
+            --primary-hover: #e59900;    /* Darker gold for buttons on hover */
+            --accent-green: #00ffaa;     /* Neon green for high success stats */
+            --text-main: #c9d1d9;        /* Soft readable text */
+            --text-light: #f0f6fc;       /* Bright text for headings/values */
+            --border-color: #30363d;     /* Minimalist borders */
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            padding: 40px 20px;
+            padding: 60px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
-        /* Style for the mascot image on the page */
-        .mascot {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-        }
+
         .container {
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            max-width: 500px;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 35px;
+            /* Creates a clean glow effect around the calculator */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 2px rgba(255, 170, 0, 0.15);
+            max-width: 520px;
             width: 100%;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
+
         h1 {
             text-align: center;
-            color: #ffaa00;
-            margin-bottom: 25px;
-            font-size: 22px;
+            color: var(--text-light);
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 24px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            /* Subtle text glow for a high-tier feel */
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
         }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
+
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #b3b3b3;
+            color: #8b949e;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
         select, input[type="number"] {
             width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background-color: #2a2a2a;
-            color: #fff;
+            padding: 14px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-input);
+            color: var(--text-light);
             font-size: 16px;
             outline: none;
             box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+
+        /* Gold highlight when fields are clicked */
         select:focus, input:focus {
-            border-color: #ffaa00;
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(255, 170, 0, 0.2);
         }
+
         .btn {
             display: block;
             width: 100%;
-            padding: 14px;
-            background-color: #ffaa00;
-            color: #121212;
+            padding: 16px;
+            background-color: var(--primary);
+            color: var(--bg-main);
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 800;
             cursor: pointer;
-            margin-top: 25px;
+            margin-top: 30px;
             text-transform: uppercase;
-            transition: background 0.2s;
+            letter-spacing: 1px;
+            transition: background 0.2s, transform 0.1s;
         }
+
         .btn:hover {
-            background-color: #e59900;
+            background-color: var(--primary-hover);
         }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
         .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: #151515;
-            border-left: 4px solid #ffaa00;
-            border-radius: 4px;
+            margin-top: 35px;
+            padding: 25px;
+            background-color: var(--bg-input);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             display: none;
         }
+
         .result-title {
             font-size: 18px;
-            font-weight: bold;
-            color: #ffaa00;
-            margin-bottom: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
         .stat-line {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            align-items: center;
+            margin-bottom: 14px;
             font-size: 15px;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 5px;
+            border-bottom: 1px dashed rgba(48, 54, 61, 0.6);
+            padding-bottom: 8px;
         }
+
+        .stat-line:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
         .stat-val {
-            color: #fff;
-            font-weight: bold;
+            color: var(--text-light);
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
-<!-- STEP 1: Displays the mascot image above your calculator container -->
-<img class="mascot" src="https://nocookie.net" alt="Yoba Mascot">
 
 <div class="container">
     <h1>Hornex High-Tier Simulator</h1>
@@ -154,7 +200,7 @@
         </div>
         <div class="stat-line">
             <span>Your Overall Probability of Success:</span>
-            <span class="stat-val" id="overallSuccess" style="color: #00ff66;">--</span>
+            <span class="stat-val" id="overallSuccess" style="color: var(--accent-green);">--</span>
         </div>
     </div>
 </div>
