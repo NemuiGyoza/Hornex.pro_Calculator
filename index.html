@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hornex Ultra/Super Precision Craft Calculator</title>
+    <!-- STEP 1: This adds the green Yoba mascot as your browser tab icon -->
+    <link rel="icon" type="image/png" href="https://nocookie.net">
     <style>
         body {
             background-color: #121212;
@@ -14,6 +16,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+        /* Style for the mascot image on the page */
+        .mascot {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
         }
         .container {
             background-color: #1e1e1e;
@@ -104,6 +112,9 @@
 </head>
 <body>
 
+<!-- STEP 1: Displays the mascot image above your calculator container -->
+<img class="mascot" src="https://nocookie.net" alt="Yoba Mascot">
+
 <div class="container">
     <h1>Hornex High-Tier Simulator</h1>
     
@@ -153,30 +164,19 @@
         const recipe = document.getElementById('recipe').value;
         const budget = parseInt(document.getElementById('budget').value);
         
-        // Exact raw chances provided by user
         const p = recipe === 'super' ? 0.01 : 0.0051; 
-        
-        // On average, failing removes 1, 2, 3, or 4 petals.
-        // Assuming equal distribution, average loss is (1+2+3+4)/4 = 2.5 petals.
         const avgLossOnFailure = 2.5; 
 
-        // Expected cost formulation:
-        // You pay 5 up front. If you fail (1-p), you get refunded some, meaning you lost avgLossOnFailure.
-        // Formula for expected net cost to hit 1 success: 5 + ((1 - p) / p) * avgLossOnFailure
         const expectedNetCost = 5 + ((1 - p) / p) * avgLossOnFailure;
 
-        // How many rolling attempts can your budget handle?
-        // First roll costs 5. Every subsequent roll costs avgLossOnFailure (2.5) to top back up.
         let maxRolls = 0;
         if (budget >= 5) {
             maxRolls = 1 + Math.floor((budget - 5) / avgLossOnFailure);
         }
 
-        // Cumulative probability: 1 - (Failure Chance)^(Number of Rolls)
         const cumulativeFailureChance = Math.pow(1 - p, maxRolls);
         const totalSuccessChance = (1 - cumulativeFailureChance) * 100;
 
-        // Render values to the UI
         document.getElementById('rawChance').innerText = `${(p * 100).toFixed(2)}%`;
         document.getElementById('expectedCost').innerText = `${Math.ceil(expectedNetCost)} ${recipe === 'super' ? 'Ultras' : 'Supers'}`;
         document.getElementById('maxRolls').innerText = `${maxRolls} attempts`;
