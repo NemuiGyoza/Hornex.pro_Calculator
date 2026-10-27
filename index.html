@@ -3,42 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hornex Craft Calculator</title>
+
+    <title>Hornex Calc</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <style>
         :root {
-            --bg-main: #0c0f12;          /* Deep dark slate */
-            --bg-card: rgba(22, 28, 36, 0.85); /* Semi-transparent container */
-            --bg-input: #0d1116;         
-            --primary: #9be1fb;          /* Ice teal/celestial blue accent from planet */
-            --primary-hover: #6cbcdb;    
-            --accent-green: #00ffaa;     
-            --text-main: #c9d1d9;        
-            --text-light: #f0f6fc;       
-            --border-color: rgba(69, 162, 158, 0.25); 
+            --bg-main: #0c0f12;
+            --bg-card: rgba(22, 28, 36, 0.85);
+            --bg-input: #0d1116;
+            --primary: #9be1fb;
+            --primary-hover: #6cbcdb;
+            --accent-green: #00ffaa;
+            --text-main: #c9d1d9;
+            --text-light: #f0f6fc;
+            --border-color: rgba(69, 162, 158, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 60px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            box-sizing: border-box;
             position: relative;
         }
 
-        /* Fixed background image set to 20% opacity */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background-image: url('https://files.catbox.moe/c1spe8.jpg');
             background-size: cover;
             background-position: center;
@@ -52,22 +55,19 @@
             border-radius: 12px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             border: 1px solid var(--border-color);
-            box-sizing: border-box;
-            backdrop-filter: blur(8px); /* Subtle frosted glass integration */
+            backdrop-filter: blur(8px);
         }
 
         h1 {
             text-align: center;
             color: var(--text-light);
-            margin-top: 0;
-            margin-bottom: 25px;
+            margin: 0 0 25px;
             font-size: 22px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(155, 225, 251, 0.2);
         }
 
         .form-group {
@@ -84,7 +84,8 @@
             letter-spacing: 0.5px;
         }
 
-        select, input[type="number"] {
+        select,
+        input[type="number"] {
             width: 100%;
             padding: 12px;
             border-radius: 6px;
@@ -93,11 +94,10 @@
             color: var(--text-light);
             font-size: 15px;
             outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
         }
 
-        select:focus, input:focus {
+        select:focus,
+        input:focus {
             border-color: var(--primary);
         }
 
@@ -115,15 +115,10 @@
             margin-top: 25px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: background 0.2s, transform 0.1s;
         }
 
         .btn:hover {
             background-color: var(--primary-hover);
-        }
-
-        .btn:active {
-            transform: scale(0.99);
         }
 
         .result-box {
@@ -145,7 +140,6 @@
             margin-bottom: 15px;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .stat-line {
@@ -170,93 +164,413 @@
             font-family: monospace;
             font-size: 15px;
         }
+
+        /* GRAPH */
+
+        .chart-box {
+            margin-top: 25px;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 9px;
+            gap: 8px;
+        }
+
+        .bar-label {
+            width: 55px;
+            text-align: right;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .bar-bg {
+            flex: 1;
+            height: 22px;
+            background: #0a0d11;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        .bar-value {
+            width: 65px;
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--text-light);
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
-    <h1>Hornex Calculator</h1>
-    
+
+    <h1>Hornex Calc</h1>
+
     <div class="form-group">
-        <label for="recipe">Rarity:</label>
+        <label for="recipe">Type:</label>
+
         <select id="recipe" onchange="updateInputLabel()">
-            <option value="super">5 Ultra ➔ 1 Super (1% Chance)</option>
-            <option value="hyper">5 Super ➔ 1 Hyper (0.51% Chance)</option>
+            <option value="super">5 U → 1 S (1%)</option>
+            <option value="hyper">5 S → 1 H (0.51%)</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="budget" id="inputLabel">Total Petals (Ultras):</label>
-        <input type="number" id="budget" min="0" value="50">
+        <label for="budget" id="inputLabel">Petals (U):</label>
+
+        <input
+            type="number"
+            id="budget"
+            min="0"
+            value="50"
+        >
     </div>
 
-    <button class="btn" onclick="calculatePreciseCraft()">Calculate</button>
+    <button class="btn" onclick="calculate()">Calc</button>
 
     <div class="result-box" id="resultBox">
-        <div class="result-title">Analysis</div>
-        
+
+        <div class="result-title">Results</div>
+
         <div class="stat-line">
-            <span>Chance per Roll:</span>
+            <span>Roll Chance</span>
             <span class="stat-val" id="rawChance">--</span>
         </div>
+
         <div class="stat-line">
-            <span>Avg Petals Lost on Fail:</span>
-            <span class="stat-val" id="lossText">2.5 petals</span>
+            <span>Avg Loss</span>
+            <span class="stat-val" id="lossText">--</span>
         </div>
+
         <div class="stat-line">
-            <span>Expected Cost per Success:</span>
+            <span>Avg Cost</span>
             <span class="stat-val" id="expectedCost">--</span>
         </div>
+
         <div class="stat-line">
-            <span>Max Budget Rolls:</span>
+            <span>Max Rolls</span>
             <span class="stat-val" id="maxRolls">--</span>
         </div>
+
         <div class="stat-line">
-            <span>Overall Success Chance:</span>
-            <span class="stat-val" id="overallSuccess" style="color: var(--accent-green);">--</span>
+            <span>Win Chance</span>
+            <span
+                class="stat-val"
+                id="overallSuccess"
+                style="color: var(--accent-green);"
+            >
+                --
+            </span>
         </div>
+
+        <!-- GRAPH -->
+
+        <div class="chart-box">
+
+            <div class="chart-title">
+                Chance per Result
+            </div>
+
+            <div id="chart"></div>
+
+        </div>
+
     </div>
+
 </div>
 
 <script>
-    function updateInputLabel() {
-        const recipe = document.getElementById('recipe').value;
-        const inputLabel = document.getElementById('inputLabel');
-        if (recipe === 'super') {
-            inputLabel.innerText = "Total Petals (Ultras):";
-        } else {
-            inputLabel.innerText = "Total Petals (Supers):";
-        }
+
+function updateInputLabel() {
+
+    const recipe =
+        document.getElementById('recipe').value;
+
+    const label =
+        document.getElementById('inputLabel');
+
+    if (recipe === 'super') {
+        label.innerText = "Petals (U):";
+    } else {
+        label.innerText = "Petals (S):";
+    }
+}
+
+
+function calculate() {
+
+    const recipe =
+        document.getElementById('recipe').value;
+
+    const budget =
+        parseInt(document.getElementById('budget').value) || 0;
+
+    const p =
+        recipe === 'super'
+            ? 0.01
+            : 0.0051;
+
+    const avgLoss = 2.5;
+
+    const unit =
+        recipe === 'super'
+            ? 'U'
+            : 'S';
+
+    const reward =
+        recipe === 'super'
+            ? 'S'
+            : 'H';
+
+
+    /*
+        Expected cost
+    */
+
+    const expectedCost =
+        5 + ((1 - p) / p) * avgLoss;
+
+
+    /*
+        Max rolls
+    */
+
+    let maxRolls = 0;
+
+    if (budget >= 5) {
+
+        maxRolls =
+            1 +
+            Math.floor(
+                (budget - 5) / avgLoss
+            );
+
     }
 
-    function calculatePreciseCraft() {
-        const recipe = document.getElementById('recipe').value;
-        const budget = parseInt(document.getElementById('budget').value) || 0;
-        
-        const p = recipe === 'super' ? 0.01 : 0.0051; 
-        const avgLossOnFailure = 2.5; 
 
-        const expectedNetCost = 5 + ((1 - p) / p) * avgLossOnFailure;
+    /*
+        Overall chance of at least 1 success
+    */
 
-        let maxRolls = 0;
-        // First roll costs 5 petals. Every failed roll after that costs 2.5 petals on average due to the partial refund logic
-        if (budget >= 5) {
-            maxRolls = 1 + Math.floor((budget - 5) / avgLossOnFailure);
+    const totalSuccessChance =
+        maxRolls > 0
+            ? (1 - Math.pow(1 - p, maxRolls)) * 100
+            : 0;
+
+
+    /*
+        Update results
+    */
+
+    document.getElementById('rawChance').innerText =
+        `${(p * 100).toFixed(2)}%`;
+
+    document.getElementById('lossText').innerText =
+        `2.5 ${unit}`;
+
+    document.getElementById('expectedCost').innerText =
+        `${Math.ceil(expectedCost)} ${unit}`;
+
+    document.getElementById('maxRolls').innerText =
+        `${maxRolls}`;
+
+    document.getElementById('overallSuccess').innerText =
+        `${totalSuccessChance.toFixed(2)}%`;
+
+
+    /*
+        Create graph
+    */
+
+    createChart(
+        maxRolls,
+        p,
+        reward
+    );
+
+
+    document.getElementById('resultBox')
+        .style.display = 'block';
+}
+
+
+function createChart(
+    rolls,
+    chance,
+    reward
+) {
+
+    const chart =
+        document.getElementById('chart');
+
+    chart.innerHTML = '';
+
+
+    if (rolls === 0) {
+
+        chart.innerHTML =
+            '<div style="text-align:center;color:#8b949e;">No rolls</div>';
+
+        return;
+    }
+
+
+    /*
+        Binomial probability:
+
+        P(k successes) =
+        C(n,k) × p^k × (1-p)^(n-k)
+    */
+
+    function combination(n, k) {
+
+        let result = 1;
+
+        for (let i = 1; i <= k; i++) {
+
+            result =
+                result *
+                (n - i + 1) /
+                i;
+
         }
 
-        const cumulativeFailureChance = Math.pow(1 - p, maxRolls);
-        const totalSuccessChance = maxRolls > 0 ? (1 - cumulativeFailureChance) * 100 : 0;
-
-        const unit = recipe === 'super' ? 'Ultras' : 'Supers';
-
-        document.getElementById('rawChance').innerText = `${(p * 100).toFixed(2)}%`;
-        document.getElementById('lossText').innerText = `2.5 ${unit.toLowerCase()}`;
-        document.getElementById('expectedCost').innerText = `${Math.ceil(expectedNetCost)} ${unit}`;
-        document.getElementById('maxRolls').innerText = `${maxRolls} rolls`;
-        document.getElementById('overallSuccess').innerText = `${totalSuccessChance.toFixed(2)}%`;
-        
-        document.getElementById('resultBox').style.display = 'block';
+        return result;
     }
+
+
+    const results = [];
+
+
+    for (let k = 0; k <= rolls; k++) {
+
+        const probability =
+            combination(rolls, k) *
+            Math.pow(chance, k) *
+            Math.pow(1 - chance, rolls - k);
+
+        results.push({
+            amount: k,
+            probability: probability * 100
+        });
+
+    }
+
+
+    /*
+        Only show useful results.
+
+        This prevents huge budgets
+        from making the graph enormous.
+    */
+
+    let visible = results.filter(
+        r => r.probability >= 0.01
+    );
+
+
+    /*
+        Always show at least 0 + 1.
+    */
+
+    if (visible.length === 0) {
+        visible = results.slice(0, 2);
+    }
+
+
+    const maxProbability =
+        Math.max(
+            ...visible.map(r => r.probability)
+        );
+
+
+    visible.forEach(result => {
+
+        const row =
+            document.createElement('div');
+
+        row.className = 'bar';
+
+
+        const label =
+            document.createElement('div');
+
+        label.className = 'bar-label';
+
+        label.innerText =
+            `${result.amount} ${reward}`;
+
+
+        const bg =
+            document.createElement('div');
+
+        bg.className = 'bar-bg';
+
+
+        const fill =
+            document.createElement('div');
+
+        fill.className = 'bar-fill';
+
+
+        /*
+            Minimum width makes tiny
+            probabilities still visible.
+        */
+
+        const width =
+            result.probability === 0
+                ? 0
+                : Math.max(
+                    2,
+                    (result.probability / maxProbability) * 100
+                );
+
+
+        fill.style.width =
+            `${width}%`;
+
+
+        bg.appendChild(fill);
+
+
+        const value =
+            document.createElement('div');
+
+        value.className = 'bar-value';
+
+        value.innerText =
+            `${result.probability.toFixed(2)}%`;
+
+
+        row.appendChild(label);
+        row.appendChild(bg);
+        row.appendChild(value);
+
+        chart.appendChild(row);
+
+    });
+
+}
+
 </script>
 
 </body>
