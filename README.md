@@ -3,7 +3,7 @@
 A visual crafting simulator and budget analysis tool built for **Hornex.pro** to calculate statistical odds, expected costs, and success rates for high-tier petals.
 
 ## Live Demo
-[Hornex.pro Calculator](https://github.io)
+[Hornex.pro Calculator](https://nemuigyoza.github.io/Hornex.pro_Calculator/)
 
 ## Features
 * **Supported Recipes:** Ultra → Super (1.00%) and Super → Hyper (0.51%).
@@ -18,6 +18,8 @@ Based on internal game rules, each roll costs 5 petals. Failures recover a rando
 * HTML5, CSS3/Modern UI, JavaScript (ES6)
 
 ## Guild Recruitment & Contact
-Leader of **Yippy [Yipp]**. Since I do not check GitHub notifications, please reach out via Discord for feedback, issues, or guild applications.
+I am the leader of the guild **Yippy [Yipp]**. Since I do not check GitHub notifications, please add me on Discord for tool feedback, issues, or guild applications.
 * **Discord:** `@nemui_gyoza`
-* **Guild Requirements:** Strict rule compliance and representation of the **[Yipp]** tag everywhere.
+
+### Guild Requirements:
+To join and stay in the guild, you must strictly follow all of our community rules. These rules apply both inside our Discord server and everywhere outside of it as long as you are wearing our tag.
